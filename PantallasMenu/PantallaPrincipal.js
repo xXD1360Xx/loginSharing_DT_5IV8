@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Image, Alert, Share, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, Image, Alert, Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { estilos } from '../estilos/styles';
 
@@ -15,74 +14,79 @@ export default function PantallaPrincipal({ navigation, route }) {
   const correo = route?.params?.correo || '';
   const contrasena = route?.params?.contrasena || '';
   
-  const seleccionarImagen = async () => {
-    try {
-      // en móvil pedimos permisos
-      if (Platform.OS !== 'web') {
-        const permiso = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (!permiso.granted) {
-          Alert.alert('Permiso denegado', 'Se necesita acceso a tus fotos');
-          return;
-        }
+const seleccionarImagen = async () => {
+  try {
+    if (Platform.OS !== 'web') {
+      const permiso = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (!permiso.granted) {
+        Alert.alert('Permiso denegado', 'Se necesita acceso a tus fotos');
+        return;
       }
-
-      // abrimos selector 
-      const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        quality: 1,
-      });
-
-      if (!result.canceled) {
-        const uri = result.assets?.[0]?.uri || result.uri;
-        if (uri) setImageUri(uri);
-      }
-    } catch (error) {
-      Alert.alert('Error', error.message);
-    }
-  };
-
-  const compartir = async () => {
-    if (!imageUri) {
-      Alert.alert('Primero selecciona una imagen');
-      return;
     }
 
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      const uri = result.assets?.[0]?.uri;
+      if (uri) setImageUri(uri);
+    }
+  } catch (error) {
+    Alert.alert('Error', error.message);
+  }
+};
+
+
+const compartir = async () => {
+  const compartirValidado = async () => {
+    if (!Sharing) return; 
     try {
-      if (Platform.OS === 'web') {
-        // Si es en web entonces intentamos usar API nativa del navegador
-        if (navigator.share) {
-          await navigator.share({
-            title: 'Compartir imagen',
-            text: 'Te comparto mi imagen de perfil',
-            url: imageUri,
-          });
-        } else {
-          Alert.alert('Tu navegador no soporta compartir');
-        }
-      } else if (await Sharing.isAvailableAsync()) {
-        await Sharing.shareAsync(imageUri);
-      } else {
-        await Share.share({
-          // Sino podemos enviar el archivo, enviamos el link
-          title: 'Compartir imagen',
-          message: 'Te comparto mi foto de perfil de Rumbo',
-          url: imageUri,
-        });
-      }
+      await Sharing.shareAsync(imageUri);
     } catch (error) {
       Alert.alert('Error al compartir', error.message);
     }
   };
 
-  
-  const cerrarSesion = () => {
-    Alert.alert('Cerrar sesión', '¿Deseas salir?', 
-      [{text: 'Cancelar', style: 'cancel'}, 
-      { text: 'Sí', onPress: () => navigation.replace('Login') }]);
-  };
+  if (Platform.OS === 'web') {
+    alert("No se puede compartir la imagen desde Expo web :(");
+    return;
+  }
 
-  
+  if (!imageUri) {
+    Alert.alert(
+      'Primero selecciona una imagen',
+      '¿Deseas abrir el explorador de archivos?',
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        { text: 'Sí', onPress: compartirValidado },
+      ]
+    );
+  } else {
+    await compartirValidado();
+  }
+};
+
+
+
+const cerrarSesion = () => {
+  if (Platform.OS === 'web') {
+    if (window.confirm("¿Deseas salir?")) {
+      navigation.replace('Login');
+    }
+  } else {
+    Alert.alert(
+      'Cerrar sesión',
+      '¿Deseas salir?',
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        { text: 'Sí', onPress: () => navigation.replace('Login') },
+      ]
+    );
+  }
+};
 
 
   return (

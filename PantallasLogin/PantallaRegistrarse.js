@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TextInput, Alert, Text, View, TouchableOpacity } from 'react-native';
+import { TextInput, Alert, Text, View, TouchableOpacity, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient'; 
 import { estilos } from '../estilos/styles';  
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -10,11 +10,6 @@ export default function PantallaRegistrarse({ navigation, route }) {
   const [contrasena, setContrasena] = useState(''); 
 
   const registrar = async () => {
-    console.log("=== DEPURACIÓN REGISTRO ===");
-    console.log("Usuario:", usuario);
-    console.log("Correo:", correo);
-    console.log("Contraseña:", contrasena);
-    console.log("============================");
 
     if (usuario === '' || contrasena === '' || !correo) {
       Alert.alert("Por favor, completa todos los campos");

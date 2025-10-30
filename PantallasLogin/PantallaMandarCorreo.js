@@ -3,6 +3,8 @@ import { TextInput, Alert, Text, View, TouchableOpacity, Platform } from 'react-
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { estilos } from '../estilos/styles';
+import { enviarCodigoCorreo } from '../backend/helpers/email';
+
 
 export default function PantallaMandarCorreo({ navigation, route }) {
   const { modo } = route.params || {};
@@ -12,15 +14,35 @@ export default function PantallaMandarCorreo({ navigation, route }) {
   const URL_LAN = 'http://192.168.100.20:3000'; 
   const URL_TUNNEL = 'https://CAMBIAR.ngrok.io';  
 
-  const detectarBackend = async () => {
-    if (Platform.OS === 'web') return URL_LOCALHOST;
-    try {
-      const respuesta = await fetch(`${URL_LAN}/ping`);
-      if (respuesta.ok) return URL_LAN;
-    } catch (e) {
-      return URL_TUNNEL;
+const detectarBackend = async () => {
+  if (Platform.OS === 'web') return URL_LOCALHOST;
+
+  try {
+    console.log('🔍 Probando LAN...');
+    const resLAN = await fetch(`${URL_LAN}/ping`);
+    if (resLAN.ok) {
+      console.log('✅ Conectado por LAN');
+      return URL_LAN;
     }
-  };
+  } catch (e) {
+    console.log('❌ LAN no responde');
+  }
+
+  try {
+    console.log('🔍 Probando emulador (10.0.2.2)...');
+    const resEmulador = await fetch('http://10.0.2.2:3000/ping');
+    if (resEmulador.ok) {
+      console.log('✅ Conectado por emulador (10.0.2.2)');
+      return 'http://10.0.2.2:3000';
+    }
+  } catch (e) {
+    console.log('❌ Emulador no responde');
+  }
+
+  console.log('🌐 Usando túnel remoto');
+  return URL_TUNNEL;
+};
+
 
   const enviarCorreo = async () => {
     if (!correo) {
@@ -53,7 +75,7 @@ export default function PantallaMandarCorreo({ navigation, route }) {
 
       if (Platform.OS === 'web') {
         alert(`Código enviado a ${correo}: ${codigo}`);
-        
+        navigation.navigate('VerificarID', { modo, correo, codigo });
       } else {
         Alert.alert('Correo enviado',`Se envió un código a ${correo}`,
           [

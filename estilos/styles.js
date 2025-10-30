@@ -16,7 +16,7 @@ export const estilos = StyleSheet.create({
   },
 
   subtitulo: {
-        fontSize: 10,
+    fontSize: 11,
     color: "#ffffffff", 
     marginBottom: 30,
     textAlign: "center",
@@ -35,7 +35,7 @@ export const estilos = StyleSheet.create({
 
   contenedorInput: {
     width: '100%',
-    minHeight: 90 * escalaWeb,
+    minHeight: 80 * escalaWeb,
     justifyContent: 'center',
     alignItems: 'flex-end',
     paddingHorizontal: 20 * escalaWeb,
@@ -55,7 +55,7 @@ export const estilos = StyleSheet.create({
 
   botonGrande: {
     width: 295 * escalaWeb,
-    height: 70 * escalaWeb,
+    height: 60 * escalaWeb,
     justifyContent: 'center',
     alignItems: 'center',    
     backgroundColor: "#8a003a",    
@@ -92,8 +92,53 @@ export const estilos = StyleSheet.create({
   textAlign: 'center',
   marginTop: 10,
   fontSize: 14,
-  }
+  },
 
+  subtituloInferior: {
+    fontSize: 10,
+    color: "#ffffffff", 
+    marginBottom: 5,
+    textAlign: "center",
+  },
 
+  separador: {
+    width: '85%',
+    height: 1,
+    backgroundColor: '#fff',
+    marginVertical: 12 * escalaWeb,
+    opacity: 0.6,
+  },
+
+  contenedorRedes: {
+    width: '100%',
+    alignItems: 'center',
+    gap: 12 * escalaWeb,
+    marginTop: 10 * escalaWeb,
+  },
+
+  botonRed: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 290 * escalaWeb,
+    height: 45 * escalaWeb,
+    backgroundColor: '#8a003a',
+    borderRadius: 30 * escalaWeb,
+    boxShadow: '1px 1px 15px rgba(255, 77, 136, 0.5)',
+    paddingHorizontal: 20,
+  },
+
+  iconoRed: {
+    width: 30 * escalaWeb,
+    height: 30 * escalaWeb,
+    resizeMode: 'contain',
+    marginRight: 12 * escalaWeb,
+  },
+
+  textoBotonRed: {
+    fontSize: 17 * escalaWeb,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
 
 });
