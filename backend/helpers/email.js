@@ -5,8 +5,7 @@ export const enviarCodigoCorreo = async ({ correo, codigo }) => {
 
   // Si no hay backend disponible, simula el envío 
   if (!BACKEND_URL) {
-    await new Promise(resolve => setTimeout(resolve, 300));
-    return { exito: false, codigo }; 
+    return { exito: false, codigo };
   }
 
   try {

@@ -44,7 +44,7 @@ const enviarCorreo = async () => {
       
       if (Platform.OS === 'web') {
         alert(mensaje);
-        setTimeout(() => navigation.navigate('VerificarID', { modo, correo, codigo }), 100);
+        navigation.navigate('VerificarID', { modo, correo, codigo })
       } else {
         Alert.alert(
           'No se pudo enviar el correo...',
