@@ -10,22 +10,26 @@ export default function PantallaMandarCorreo({ navigation, route }) {
   const [correo, setCorreo] = useState('');
   const regexCorreo = /^[A-Za-z0-9._%+-]{5,}@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
 
+const enviarCorreo = async () => {
+  if (!correo || (correo !== "8" && !regexCorreo.test(correo))) {
+    const msg = 'Ingresa un correo válido';
+    Platform.OS === 'web' ? alert(msg) : Alert.alert('Error', msg);
+    setCorreo("");
+    return;
+  }
 
-  const enviarCorreo = async () => {
-    if (!correo || (correo !== "8" && !regexCorreo.test(correo))) {
-      const msg = 'Ingresa un correo válido';
-      Platform.OS === 'web' ? alert(msg) : Alert.alert('Error', msg);
-      setCorreo("");
-      return;
-    }
+  const codigo = Math.floor(1000 + Math.random() * 9000).toString();
+  let exito = false;
 
-    const codigo = Math.floor(1000 + Math.random() * 9000).toString();
-    const exito = await enviarCodigoCorreo({ correo, codigo });
+  try {
+    const resultado = await enviarCodigoCorreo({ correo, codigo });
+    exito = resultado.exito;
 
-    if (exito || correo === "8") {
+    if (exito) {
+      // Si se logró enviar el correo
       if (Platform.OS === 'web') {
         alert(`Éxito enviando... se ha enviado correctamente el código al correo: ${correo}`);
-        navigation.navigate('VerificarID', { modo, correo, codigo });
+        setTimeout(() => navigation.navigate('VerificarID', { modo, correo, codigo }), 100);
       } else {
         Alert.alert(
           'Éxito enviando...',
@@ -35,20 +39,27 @@ export default function PantallaMandarCorreo({ navigation, route }) {
         );
       }
     } else {
+      // Si no se pudo enviar el correo
+      const mensaje = `No se pudo enviar el correo... pero puedes continuar con el código: ${codigo}`;
+      
       if (Platform.OS === 'web') {
-        alert(`No se pudo enviar el correo... pero puedes continuar con el código ${codigo}`);
+        alert(mensaje);
+        setTimeout(() => navigation.navigate('VerificarID', { modo, correo, codigo }), 100);
       } else {
         Alert.alert(
           'No se pudo enviar el correo...',
-          `Pero puedes continuar la prueba con el código ${codigo}`,
+          mensaje,
           [{ text: 'Continuar', onPress: () => navigation.navigate('VerificarID', { modo, correo, codigo }) }],
           { cancelable: false }
         );
       }
     }
+  } catch (error) {
+    // Maneja cualquier error adicional aquí
+    console.error("Error al intentar enviar el correo: ", error);
+  }
+};
 
-  
-  };
 
   return (
     <LinearGradient colors={['#000000ff', '#ffffffff', '#000000ff']} style={{ flex: 1 }}>

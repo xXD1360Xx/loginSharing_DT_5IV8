@@ -108,11 +108,11 @@ export default function PantallaLogin({ navigation }) {
 
         <View style={{ marginTop: 10, alignItems: 'center' }}>
 
-          <TouchableOpacity onPress={() => navigation.navigate('MandarCorreo')}>
+          <TouchableOpacity onPress={() => navigation.navigate('MandarCorreo', { modo: 'recuperar' })}>
             <Text style={estilos.enlace}>¿Olvidaste tu contraseña?</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => navigation.navigate('MandarCorreo')}>
+          <TouchableOpacity onPress={() => navigation.navigate('MandarCorreo', { modo: 'crear' })}>
             <Text style={estilos.enlace}>Crear nueva cuenta</Text>
           </TouchableOpacity>
           
