@@ -105,6 +105,19 @@ export default function PantallaLogin({ navigation }) {
           <Text style={estilos.textoBotonGrande}>Iniciar sesión</Text>
         </TouchableOpacity>
 
+
+        <View style={{ marginTop: 10, alignItems: 'center' }}>
+
+          <TouchableOpacity onPress={() => navigation.navigate('MandarCorreo')}>
+            <Text style={estilos.enlace}>¿Olvidaste tu contraseña?</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => navigation.navigate('MandarCorreo')}>
+            <Text style={estilos.enlace}>Crear nueva cuenta</Text>
+          </TouchableOpacity>
+          
+        </View>
+
         <View style={estilos.separador} />
 
         <Text style={estilos.subtituloInferior}>Puedes iniciar sesión con tus redes</Text>

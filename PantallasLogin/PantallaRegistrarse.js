@@ -8,28 +8,65 @@ export default function PantallaRegistrarse({ navigation, route }) {
   const { correo } = route.params || {};
   const [usuario, setUsuario] = useState('');
   const [contrasena, setContrasena] = useState(''); 
+  const [rolSeleccionado, setRolSeleccionado] = useState(null);
+
+  const roles = [
+    'Estudiante universitario',
+    'Egresado/a de una carrera',
+    'Docente/orientador',
+    'Estudiante explorando opciones de carreras'
+  ];
+
 
   const registrar = async () => {
+  let mensajeError = null;
 
-    if (usuario === '' || contrasena === '' || !correo) {
-      Alert.alert("Por favor, completa todos los campos");
-      return;
-    }
+  if (
+    (usuario?.trim?.() ?? '') === '' ||
+    (contrasena?.trim?.() ?? '') === '' ||
+    (correo?.trim?.() ?? '') === ''
+  ) {
+    mensajeError = "Por favor, completa todos los campos";
+  } else if (!/^.{6,}$/.test(usuario)) {
+    mensajeError = "El usuario debe tener al menos 6 caracteres";
+  } else if (!/^(?=.*\d).{6,}$/.test(contrasena)) {
+    mensajeError = "La contraseña debe tener al menos 6 caracteres y contener un número";
+  } else if (!rolSeleccionado) {
+    mensajeError = "Por favor, selecciona un rol";
+  }
+
+if (mensajeError) {
+  if (Platform.OS === 'web') {
+    alert(mensajeError);
+  } else {
+    Alert.alert("Error", mensajeError);
+  }
+  return;
+}
 
     try {
       // aquí va la lógica para registrar en base de datos
 
+      const rolTexto = roles[rolSeleccionado];
+
       if (Platform.OS === 'web') {
         alert('Cuenta creada correctamente');
-       } else {
-          Alert.alert('[Exito', 'Cuenta creada correctamente', [{ text: 'Continuar' }], { cancelable: false });
-       }
-      navigation.navigate('MenuPrincipal', { usuario, contrasena, correo });
-
+        navigation.navigate('MenuPrincipal', { usuario, contrasena, correo, rolSeleccionado, rolTexto });
+      } else {
+        Alert.alert(
+          'Éxito',
+          'Cuenta creada correctamente',
+          [
+            { text: 'Continuar', onPress: () => navigation.navigate('MenuPrincipal', { usuario, contrasena, correo, rolSeleccionado, rolTexto }) }
+          ],
+          { cancelable: false }
+        );
+      }
     } catch (error) {
       console.error("Error al registrar:", error);
       Alert.alert("Error", "No se pudo crear la cuenta. Intenta de nuevo.");
     }
+
   };
 
   return (
@@ -59,6 +96,16 @@ export default function PantallaRegistrarse({ navigation, route }) {
           secureTextEntry={true}
           onChangeText={setContrasena}
         />
+
+        <View style={estilos.contenedorRoles}>
+          <Text style={estilos.subtitulo}>Selecciona el rol que mejor te represente</Text>
+          {roles.map((rol, index)=>(
+            <TouchableOpacity key={index} style={estilos.rolOpcion} onPress={()=>setRolSeleccionado(index)}>
+              <View style={estilos.rolCirculo}>{rolSeleccionado===index&&<View style={estilos.rolCirculoSeleccionado}/>}</View>
+              <Text style={estilos.textoRol}>{rol}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
 
         <View style={estilos.contenedorBotones}>
           <TouchableOpacity onPress={() => navigation.navigate('MandarCorreo')} style={[estilos.botonChico, { backgroundColor: "#454545ff" }]} >

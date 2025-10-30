@@ -42,7 +42,7 @@ const seleccionarImagen = async () => {
 
 const compartir = async () => {
   const compartirValidado = async () => {
-    if (!Sharing) return; 
+    if (!Sharing || !imageUri) return;
     try {
       await Sharing.shareAsync(imageUri);
     } catch (error) {
@@ -55,18 +55,35 @@ const compartir = async () => {
     return;
   }
 
-  if (!imageUri) {
+if (!imageUri) {
     Alert.alert(
       'Primero selecciona una imagen',
       '¿Deseas abrir el explorador de archivos?',
       [
         { text: 'Cancelar', style: 'cancel' },
-        { text: 'Sí', onPress: compartirValidado },
+        { 
+          text: 'Sí', 
+          onPress: async () => {
+            try {
+              const result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                quality: 1,
+              });
+              if (!result.canceled) {
+                setImageUri(result.assets[0].uri);
+                await compartirValidado(); 
+              }
+            } catch (error) {
+              Alert.alert('Error al abrir el explorador', error.message);
+            }
+          },
+        },
       ]
     );
-  } else {
-    await compartirValidado();
+    return;
   }
+
+  await compartirValidado();
 };
 
 

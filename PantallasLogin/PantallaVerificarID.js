@@ -1,9 +1,12 @@
+
 import React, { useState } from 'react';
 import { TextInput, Alert, Text, View, TouchableOpacity, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { estilos } from '../estilos/styles';
 import { enviarCodigoCorreo } from '../backend/helpers/email';
+import { detectarBackend } from '../backend/helpers/detectarBackend';
+
 
 
 export default function PantallaVerificarID({ navigation, route }) {
@@ -28,8 +31,10 @@ export default function PantallaVerificarID({ navigation, route }) {
       );
     }
   };
+  
 
 
+  
   const verificarCodigo = () => {
     const codigoUsuario = (codigoIngresado || '').trim();
     const codigoCorrecto = (codigo || '').toString().trim();
@@ -58,12 +63,38 @@ export default function PantallaVerificarID({ navigation, route }) {
     }
   };
 
-  const reenviarCodigo = async () => {
-    const exito = await enviarCodigoCorreo({ correo, codigo });
+const reenviarCodigo = async () => {
+
+   const exito = await enviarCodigoCorreo({ correo, codigo });
+
     if (exito) {
-      console.log('Código reenviado correctamente');
+      navigation.navigate('VerificarID', { modo, correo, codigo });
+      if (Platform.OS === 'web') {
+        alert(`Éxito, se ha reenviado correctamente el código`);
+      } else {
+        Alert.alert(
+          'Éxito reenviando',
+          `Se ha reenviado correctamente el código`,
+          [{ text: 'Continuar', onPress: () => navigation.navigate('VerificarID', { modo, correo, codigo }) }],
+          { cancelable: false }
+        );
+      }
+    } else {
+      if (Platform.OS === 'web') {
+        alert(`No se pudo reenviar el correo, pero puedes continuar con el código ${codigo}`);
+      } else {
+        Alert.alert(
+          'Error reenviando',
+          `No se pudo reenviar el correo, pero puedes continuar con el código ${codigo}`,
+          [{ text: 'Continuar', onPress: () => navigation.navigate('VerificarID', { modo, correo, codigo }) }],
+          { cancelable: false }
+        );
+      }
     }
-  };
+};
+
+
+
 
   return (
     <LinearGradient colors={['#000000ff', '#ffffffff', '#000000ff']} style={{ flex: 1 }}>

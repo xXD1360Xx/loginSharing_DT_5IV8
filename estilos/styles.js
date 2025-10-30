@@ -88,16 +88,25 @@ export const estilos = StyleSheet.create({
   },
 
   enlace: {
-  color: '#ffffffff',
-  textAlign: 'center',
-  marginTop: 10,
-  fontSize: 14,
+    color: '#0055ff',
+    textAlign: 'center',
+    marginTop: 8 * escalaWeb,
+    fontSize: 15 * escalaWeb,
+    textDecorationLine: 'underline',
+    fontWeight: '600',
   },
 
   subtituloInferior: {
-    fontSize: 10,
-    color: "#ffffffff", 
-    marginBottom: 5,
+    fontSize: 16 * escalaWeb,
+    color: "#ffffffff",
+    marginBottom: 8 * escalaWeb,
+    textAlign: "center",
+  },
+
+  subtituloRol: {
+    fontSize: 14,
+    color: "#000000ff", 
+    marginBottom: 15,
     textAlign: "center",
   },
 
@@ -140,5 +149,36 @@ export const estilos = StyleSheet.create({
     fontWeight: 'bold',
     color: '#fff',
   },
+
+  contenedorRoles: {
+    width: '100%',
+    marginBottom: 25 * escalaWeb,
+  },
+  rolOpcion: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8 * escalaWeb,
+  },
+  rolCirculo: {
+    height: 20 * escalaWeb,
+    width: 20 * escalaWeb,
+    borderRadius: 10 * escalaWeb,
+    borderWidth: 2,
+    borderColor: '#8a003a',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 10 * escalaWeb,
+  },
+  rolCirculoSeleccionado: {
+    height: 10 * escalaWeb,
+    width: 10 * escalaWeb,
+    borderRadius: 5 * escalaWeb,
+    backgroundColor: '#8a003a',
+  },
+  textoRol: {
+    color: '#000000ff',
+    fontSize: 16 * escalaWeb,
+  },
+
 
 });
