@@ -29,6 +29,7 @@ export default function PantallaLogin({ navigation }) {
     if (usuario === 'admin' && contrasena === '1234') {
       if (Platform.OS === 'web') {
         alert('Inicio de sesión exitoso');
+        navigation.navigate('MenuPrincipal', { usuario });
       } else {
         Alert.alert('Éxito', 'Inicio de sesión exitoso', [
           { text: 'Continuar', onPress: () => navigation.navigate('MenuPrincipal', { usuario }) },

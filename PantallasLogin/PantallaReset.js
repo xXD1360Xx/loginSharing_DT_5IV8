@@ -39,12 +39,28 @@ export default function PantallaReset({ navigation }) {
           { cancelable: false }
         );
       }
+
+
+      const regex = /^(?=.*\d).{6,}$/;
+      if (!regex.test(contrasena)) {
+        if (Platform.OS === 'web') {
+          alert('La contraseña debe tener al menos 6 caracteres y contener al menos un número.');
+        } else {
+          Alert.alert('Error', 'La contraseña debe tener al menos 6 caracteres y contener al menos un número.', [{ text: 'Reintentar', onPress: limpiarContrasena }], { cancelable: false });
+        }
+        setContraseña("");
+        setConfirmarContrasena("");
+        return;
+      }
+
     } catch (error) {
       if (Platform.OS === 'web') {
         alert('Error al actualizar la contraseña: ' + error.message);
       } else {
         Alert.alert('Error', 'Error al actualizar la contraseña: ' + error.message);
       }
+      setContraseña("");
+      setConfirmarContrasena("");
     }
   };
 

@@ -1,14 +1,22 @@
-import React, { useState } from 'react';
-import { TextInput, Alert, Text, View, TouchableOpacity, Platform } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { TextInput, Alert, Text, View, TouchableOpacity, Platform, ActivityIndicator  } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { estilos } from '../estilos/styles';
 import { enviarCodigoCorreo } from '../backend/helpers/email';
 
+
 export default function PantallaMandarCorreo({ navigation, route }) {
-  const { modo } = route.params || {};
-  const [correo, setCorreo] = useState('');
+  const { modo, correo: correoParam } = route.params || {};
   const regexCorreo = /^[A-Za-z0-9._%+-]{5,}@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+  const [cargando, setCargando] = useState(false);
+  const [correo, setCorreo] = useState(correoParam || "");
+  
+  useEffect(() => {
+    if (correoParam) {
+      setCorreo(correoParam);
+    }
+  }, [correoParam]);
 
 const enviarCorreo = async () => {
   if (!correo || (correo !== "8" && !regexCorreo.test(correo))) {
@@ -20,6 +28,7 @@ const enviarCorreo = async () => {
 
   const codigo = Math.floor(1000 + Math.random() * 9000).toString();
   let exito = false;
+  setCargando(true);
 
   try {
     const resultado = await enviarCodigoCorreo({ correo, codigo });
@@ -41,7 +50,7 @@ const enviarCorreo = async () => {
     } else {
       // Si no se pudo enviar el correo
       const mensaje = `No se pudo enviar el correo... pero puedes continuar con el código: ${codigo}`;
-      
+
       if (Platform.OS === 'web') {
         alert(mensaje);
         navigation.navigate('VerificarID', { modo, correo, codigo })
@@ -57,8 +66,12 @@ const enviarCorreo = async () => {
   } catch (error) {
     // Maneja cualquier error adicional aquí
     console.error("Error al intentar enviar el correo: ", error);
+  } finally {
+    // Ocultar indicador de carga al finalizar
+    setCargando(false);
   }
 };
+
 
 
   return (
@@ -81,8 +94,7 @@ const enviarCorreo = async () => {
         <View style={estilos.contenedorBotones}>
           <TouchableOpacity
             onPress={() => navigation.navigate('Login')}
-            style={[estilos.botonChico, { backgroundColor: '#454545ff' }]}
-          >
+            style={[estilos.botonChico, { backgroundColor: '#454545ff' }]}>
             <Text style={[estilos.textoBotonChico, { fontSize: 17 }]}>Regresar</Text>
           </TouchableOpacity>
 
@@ -90,6 +102,14 @@ const enviarCorreo = async () => {
             <Text style={[estilos.textoBotonChico, { fontSize: 17 }]}>Mandar correo</Text>
           </TouchableOpacity>
         </View>
+
+        {cargando && (
+          <View style={{ marginTop: 15, alignItems: "center" }}>
+            <ActivityIndicator size="small" />
+            <Text style={{ marginTop: 6 }}>Enviando correo...</Text>
+          </View>
+        )}
+        
       </SafeAreaView>
     </LinearGradient>
   );

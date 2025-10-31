@@ -18,14 +18,14 @@ export default function PantallaVerificarID({ navigation, route }) {
     if (Platform.OS === 'web') {
       const seguro = window.confirm("¿Seguro que quieres regresar? Tendrás que validar otro código distinto");
       if (seguro) {
-        navigation.navigate('MandarCorreo');
+        navigation.navigate('MandarCorreo', {modo, correo});
       }
     } else {
       Alert.alert(
         'Código correcto',
         'Se ha verificado exitosamente',
         [
-          { text: 'Continuar', onPress: () => navigation.navigate('MandarCorreo') }
+          { text: 'Continuar', onPress: () => navigation.navigate('MandarCorreo', {modo, correo}) }
         ],
         { cancelable: false }
       );
