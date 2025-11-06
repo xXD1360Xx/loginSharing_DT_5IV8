@@ -14,7 +14,7 @@ import rutasAutenticacion from "./rutas/autenticacionRutas.js";
 const app = express();
 
 // 🔑 Configurar SendGrid
-sgMail.setApiKey(process.env.APIKEY);
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 // ⚙️ Middlewares
 app.use(cors());

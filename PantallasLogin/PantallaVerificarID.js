@@ -22,8 +22,8 @@ export default function PantallaVerificarID({ navigation, route }) {
       }
     } else {
       Alert.alert(
-        'Código correcto',
-        'Se ha verificado exitosamente',
+        '¿Seguro que quieres regresar?',
+        'Tendrás que validar otro código distinto',
         [
           { text: 'Continuar', onPress: () => navigation.navigate('MandarCorreo', {modo, correo}) }
         ],

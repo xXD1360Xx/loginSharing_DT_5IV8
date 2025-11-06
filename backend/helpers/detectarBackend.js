@@ -3,7 +3,7 @@ import { Platform } from 'react-native';
 // URLs posibles
 export const URL_LOCALHOST = 'http://localhost:3000';
 export const URL_LAN = 'http://192.168.100.20:3000'; // Cambia a tu IP local
-export const URL_TUNNEL = 'https://TU_TUNNEL.ngrok.io';
+export const URL_TUNNEL = 'https://supergeneric-lylah-interfenestral.ngrok-free.dev';
 
 // Función para probar un servidor
 const probarServidor = async (url) => {
